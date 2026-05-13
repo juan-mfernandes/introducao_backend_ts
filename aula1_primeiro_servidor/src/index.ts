@@ -1,7 +1,22 @@
-import express, {Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 const app = express();
 const port: number = 3001;
+
+app.use(express.json());
+
+interface Task {
+    id: number,
+    descricao: string
+    done: boolean
+};
+
+app.post('/tasks', ( req: Request, res: Response) => {
+    const body: Task = req.body;
+    console.log(body)
+    res.status(201).json(body)
+    return;
+})
 
 app.get( '/status', (req: Request, res: Response) => {
     res.status(200).json({ message: "Servidor OK!"});
@@ -38,7 +53,6 @@ app.get("/teste" , (req: Request, res: Response) => {
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 });
-
 
 
 
