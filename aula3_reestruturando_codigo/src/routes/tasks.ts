@@ -24,12 +24,28 @@ taskRouter.get( '/', (req: Request, res: Response ) => {
 
 // GET para buscar tarefa pelo ID
 taskRouter.get( '/:id', (req: Request, res: Response) => {
-    const id = Number(req.params.id);
+    const id: number = Number(req.params.id);
+    const arrayTasks: Task[] = tasks;
+    if(!arrayTasks || arrayTasks.length === 0) {
+        res.status(404).json({message: "Tarefa não encontrada."});
+        return;
+    }
+    const taskFound: Task | undefined = arrayTasks.find( (task) => { return task.id === id });
+    res.status(200).json(
+       taskFound
+    )
+    return;
 });
 
 // DELETE para deletar tarefa pelo ID
 taskRouter.delete( '/:id', (req: Request, res: Response) => {
-
+    const id: number = Number(req.params.id);
+    const taskIndex: number = tasks.findIndex( task => task.id === id );
+    if( taskIndex === -1 ) {
+        return res.status(404).json({error: "Tarefa não encontrada"});
+    };
+    tasks.splice(taskIndex, 1);
+    return res.status(200).json({ message: "Tarefa deletada com sucesso. :))" });
 });
 
 

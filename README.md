@@ -1,4 +1,4 @@
-# Introdução Backend
+# Introdução ao Desenvolvimento Backend
 
 Projeto de aprendizado de desenvolvimento backend com Node.js, Express e TypeScript.
 
