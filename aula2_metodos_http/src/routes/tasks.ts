@@ -48,7 +48,6 @@ taskRouter.delete( '/:id', (req: Request, res: Response) => {
     return res.status(200).json({ message: "Tarefa deletada com sucesso. :))" });
 });
 
-
 // POST = Envia tarefas para o servidor /tasks
 taskRouter.post('/', (req: Request, res: Response) => {
     const task: Task = req.body;
@@ -66,6 +65,8 @@ taskRouter.post('/', (req: Request, res: Response) => {
     res.status(201).json({id: curId, tarefa: task});
     return;
 });
+
+
 
 
 export default taskRouter;

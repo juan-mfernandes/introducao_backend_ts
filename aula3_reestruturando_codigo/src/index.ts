@@ -1,5 +1,5 @@
 import express, {Request, Response } from 'express';
-import taskRouter from './routes/tasks';
+import tasksRouter from './routes/taskRouter';
 
 const app = express();
 const port = 3001;
@@ -11,7 +11,7 @@ app.get('/health', (req: Request, res: Response) => {
     return;
 })
 
-app.use( '/tasks', taskRouter);
+app.use( '/tasks', tasksRouter);
 
 app.listen(port, ()=> {
     console.log(`Servidor rodando na porta ${port}`);
