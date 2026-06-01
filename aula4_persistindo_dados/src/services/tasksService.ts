@@ -33,8 +33,16 @@ function createTask(title: string): Task | undefined {
 };
 
 // Função que atualiza título da tarefa
-function updateTask(id: number, newTitle: string ) {
-    
+function updateTask(id: number, newTitle: string ): Task | null {
+    const foundTask = getTaskById(id);
+
+    if(!foundTask) {
+        return null;
+    };
+
+    foundTask.title = newTitle;
+    return foundTask;
+
 }
 
 // Função que marca tarefa como concluída
@@ -42,4 +50,19 @@ function doneTask(id: number) {
     
 }
 
-export default { createTask, getAll, getTaskById };
+// Função que deleta uma tarefa
+function deleteTask(id: number): Task[] | null {
+    const foundTask = tasks.find( (task) => task.id === id );
+    if(!foundTask) {
+        return null;
+    }
+
+    const deletedTask = tasks.splice(foundTask.id -1, 1);
+    if(!deletedTask) {
+        return null;
+    }
+
+    return deletedTask;
+}
+
+export default { createTask, getAll, getTaskById, updateTask, doneTask, deleteTask };

@@ -14,6 +14,32 @@ function show(req: Request, res: Response): any {
     return;
 }
 
+function inputValidate(title: string): string | undefined {
+    const hasNumber = /\d/.test(title);
+
+    const tasks: Task[] = tasksService.getAll();
+    const taskExists: Task | undefined = tasks.find( task => task.title === title); 
+
+    let errorMessage: string;
+
+    if(!title || title.trim() === ""){
+        errorMessage = "Formato de texto inválido.";
+        return errorMessage;
+    } else if(title.length < 3) {
+        errorMessage = "O título precisa ter pelo menos 3 caracteres.";
+        return errorMessage
+    } else if(title.length > 20) {
+        errorMessage = "O título precisa ter no máximo 20 caracteres.";
+        return errorMessage;
+    } else if (taskExists !== undefined) {    
+        errorMessage = "Uma tarefa com esse título já existe."
+        return errorMessage;
+    } else if(hasNumber) {
+        errorMessage = "Um título não pode conter números.";
+        return errorMessage;
+    };
+}
+
 function create(req: Request, res: Response) {
     const title: string = String(req.body.title);
     const hasNumber = /\d/.test(title);
@@ -21,28 +47,63 @@ function create(req: Request, res: Response) {
     const tasks: Task[] = tasksService.getAll();
     const taskExists: Task | undefined = tasks.find( task => task.title === title); 
 
-    if(!title || title.trim() === ""){
-        res.status(400).json({error: "Formato de texto inválido."});
+    const resultValidate = inputValidate(title);
+    
+    if(resultValidate) {
+        res.status(400).json({error: resultValidate});
         return;
-    } else if(title.length < 3) {
-        res.status(400).json({error: "O título precisa ter pelo menos 3 caracteres."});
-    } else if(title.length > 20) {
-        res.status(400).json({error: "O título precisa ter no máximo 20 caracteres."});
-        return;
-    } else if (taskExists !== undefined) {
-        res.status(400).json({error: "Uma tarefa com esse título já existe."});
-        return;
-    } else if(hasNumber) {
-        res.status(400).json({error: "Um título não pode conter números."});
-        return
-    };
+    }
 
     const createdTask: Task | undefined = tasksService.createTask(title);
     return res.status(201).json({success: "Tarefa criada com sucesso.", createdTask});
 };
 
 function update( req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const title: string = String(req.body.title);
+    const hasNumber = /\d/.test(title);
 
+    const tasks: Task[] = tasksService.getAll();
+    const taskExists: Task | undefined = tasks.find( task => task.title === title);
+
+    const taskIdExist = tasks.find( (task) => task.id === id );
+
+    const resultValidate = inputValidate(title);
+    if(resultValidate) {
+        res.status(400).json({error: resultValidate});
+        return;
+    }
+    
+    if(!taskIdExist) {
+        res.status(404).json({error: "Id não encontrado."});
+        return;
+    }
+    if (taskExists) {
+        res.status(400).json({erro: "Uma tarefa com este nome já existe."});
+        return;
+    }
+
+    const updatedTask: Task | null = tasksService.updateTask(id, title);
+    return res.status(202).json({success: "Tarefa atualizada com sucesso.", updatedTask});
+
+}
+
+function getById(req: Request, res: Response) {
+
+}
+
+function del(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const deletedTask = tasksService.deleteTask(id);
+
+    if(deletedTask === null || deletedTask.length === 0 ) {
+        res.status(404).json({success: "Id da tarefa não encontrado."});
+        return;
+    };
+
+    res.status(202).json({success: "Tarefa deletada com sucesso."});
+    return;
 }
 
 // GET = Retorna todas as tarefas /tasks
@@ -102,4 +163,4 @@ function update( req: Request, res: Response) {
 // });
 
 
-export default { show, create, update };
+export default { show, getById, create, update, del };
