@@ -1,5 +1,6 @@
 import express, {Request, Response } from 'express';
 import tasksRouter from './routes/taskRouter';
+import './db/database';
 
 const app = express();
 const port = 3001;

@@ -47,7 +47,7 @@ function updateTask(id: number, newTitle: string ): Task | null {
 
 // Função que marca tarefa como concluída
 function doneTask(id: number) {
-    
+    // implementar
 }
 
 // Função que deleta uma tarefa

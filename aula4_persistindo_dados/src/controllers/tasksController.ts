@@ -89,7 +89,7 @@ function update( req: Request, res: Response) {
 }
 
 function getById(req: Request, res: Response) {
-
+  // implementar
 }
 
 function del(req: Request, res: Response) {
